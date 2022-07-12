@@ -133,10 +133,10 @@ export default {
   watch: {
     getUser: function (val) {
       if (val === "") {
-        // 用户没有登录
+        // not loggin
         this.setShoppingCart([]);
       } else {
-        // 用户已经登录,获取该用户的购物车信息
+        // user is loggin access user`s shoppingcart
         this.$axios
           .post("/api/user/shoppingCart/getShoppingCart", {
             user_id: val.user_id
@@ -146,7 +146,7 @@ export default {
               // 001 为成功, 更新vuex购物车状态
               this.setShoppingCart(res.data.shoppingCartData);
             } else {
-              // 提示失败信息
+              // error
               this.notifyError(res.data.msg);
             }
           })
