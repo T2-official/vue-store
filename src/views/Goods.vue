@@ -119,10 +119,126 @@ export default {
       }
       this.backtop();
     },
-    
+    getCategory() {
+      this.$axios
+        .post("/api/product/getCategory", {})
+        .then(res => {
+          const val = {
+            category_id: 0,
+            category_name: "全部"
+          };
+          const cate = res.data.category;
+          cate.unshift(val);
+          this.categoryList = cate;
+        })
+        .catch(err => {
+          return Promise.reject(err);
+        });
+    },
+    getData() {
+      const api =
+        this.categoryID.length == 0
+          ? "/api/product/getAllProduct"
+          : "/api/product/getProductByCategory";
+      this.$axios
+        .post(api, {
+          categoryID: this.categoryID,
+          currentPage: this.currentPage,
+          pageSize: this.pageSize
+        })
+        .then(res => {
+          this.product = res.data.Product;
+          this.total = res.data.total;
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+    },
+    getProductBysearch() {
+      this.$axios
+        .post("/api/product/getProductBy", {
+          search: this.search,
+          currentPage: this.currentPage,
+          pageSize: this.pageSize
+        })
+        .then(res => {
+          this.product = res.data.Product;
+          this.total = res.data.total;
+        })
+        .catch(err => {
+          return Promise.reject(err);
+        });
+    }
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.goods {
+  background-color: #f5f5f5;
+}
+
+/* 面包屑CSS */
+.el-tabs--card .el-tabs__header {
+  border-bottom: none;
+}
+
+.goods .breadcrumb {
+  height: 50px;
+  background-color: white;
+}
+
+.goods .breadcrumb .el-breadcrumb {
+  width: 1225px;
+  line-height: 30px;
+  font-size: 16px;
+  margin: 0 auto;
+}
+
+/* 面包屑CSS END */
+
+/* 分类标签CSS */
+.goods .nav {
+  background-color: white;
+}
+
+.goods .nav .product-nav {
+  width: 1225px;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 auto;
+}
+
+.nav .product-nav .title {
+  width: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  float: left;
+}
+
+/* 分类标签CSS END */
+
+/* 主要内容区CSS */
+.goods .main {
+  margin: 0 auto;
+  max-width: 1225px;
+}
+
+.goods .main .list {
+  min-height: 650px;
+  padding-top: 14.5px;
+  margin-left: -13.7px;
+  overflow: auto;
+}
+
+.goods .main .pagination {
+  height: 50px;
+  text-align: center;
+}
+
+.goods .main .none-product {
+  color: #333;
+  margin-left: 13.7px;
+}
+
+/* 主要内容区CSS END */
 </style>
